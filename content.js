@@ -17,19 +17,26 @@ function sleep(milliseconds) {
   }
 }
 
+var ctrlWasHit = false;
 
 document.onkeydown = function(e) {
 
-  var key = e.which || e.keyCode;
-  if (key === 13) { // 13 is enter
-    // code for enter
-    // alert("Enter pressed")
-    console.log("ENTERED");
+  var div1 = document.querySelector("[aria-label='Type a message...']");
+      var actualSpan = $(div1).find("div").find("div").find("span").find("span");
 
-    var div1 = document.querySelector("[aria-label=\"Type a message...\"]");
-    var actualSpan = $(div1).find("div").find("div").find("span").find("span");
-    actualSpan.text("WE R HAKERS LEL");
-    console.log($(actualSpan).innerHTML);
-    console.log(actualSpan.text());
-  } 
+  var key = e.which || e.keyCode;
+  if (key == 17 && !ctrlWasHit) {
+      console.log("second");
+
+      var oldText = $(actualSpan).text();
+      console.log(oldText);
+      
+      actualSpan.html("yes yes yes");
+      ctrlWasHit = true;
+  } else if (ctrlWasHit) {
+
+      console.log("third");
+
+      ctrlWasHit = false;
+  }
 }
