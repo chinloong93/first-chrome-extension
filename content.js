@@ -14,27 +14,11 @@ document.onkeydown = function(e) {
   var actualSpan = $(div1).find("div").find("div").find("span").find("span");
 
   var key = e.which || e.keyCode;
-  if (key == 17) {
-      console.log("second");
+  if (key == 18) {
 
-      var oldText = $(actualSpan).text();
-      console.log(oldText);
-      
-      // encrypt oldText here
+    var message = $(actualSpan).text();
+    var encrypted = sjcl.encrypt("password", message);
 
-      var iv  = CryptoJS.enc.Hex.parse('be410fea41df7162a679875ec131cf2c');
-      var secret = prompt("Secret Passphrase?");
-
-      var encrypted = CryptoJS.AES.encrypt(
-          oldText,
-          secret,
-          {
-            iv: iv,
-            mode: CryptoJS.mode.CBC,
-            padding: CryptoJS.pad.Pkcs7
-          }
-        );
-
-      actualSpan.html(encrypted.toString());
+    actualSpan.html(encrypted);
   }
 }
