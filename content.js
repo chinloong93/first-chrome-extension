@@ -22,6 +22,19 @@ document.onkeydown = function(e) {
       
       // encrypt oldText here
 
-      actualSpan.html("yes yes yes");
+      var iv  = CryptoJS.enc.Hex.parse('be410fea41df7162a679875ec131cf2c');
+      var secret = prompt("Secret Passphrase?");
+
+      var encrypted = CryptoJS.AES.encrypt(
+          oldText,
+          secret,
+          {
+            iv: iv,
+            mode: CryptoJS.mode.CBC,
+            padding: CryptoJS.pad.Pkcs7
+          }
+        );
+
+      actualSpan.html(encrypted.toString());
   }
 }
