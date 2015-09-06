@@ -121,6 +121,9 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
       sendResponse({farewell: ReqDat});
   } if (request.greeting == "start") {
     //set bananaz to messageComposer
+
+    console.log(request.fbid);
+
     injectMe();
 
     //grab facebookID, or save one if doesnt exist
