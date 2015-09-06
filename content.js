@@ -22,3 +22,26 @@ document.onkeydown = function(e) {
     actualSpan.html(encrypted);
   }
 }
+
+chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+  if (request.greeting == "decrypt") {
+      var encryptedMessages = $("div:contains('{\"iv\":\"')");
+      console.log(encryptedMessages);
+      for (var i = 0; i < encryptedMessages.length; i++) {
+        var text = $(encryptedMessages[i]).text();
+        if (text.startsWith("{\"iv")) {
+          console.log(text);
+          try {
+            var decrypted = sjcl.decrypt("password", text);
+            $(encryptedMessages[i]).text(decrypted);
+          } catch (err) {
+            //ignore
+          }
+        }
+      }
+      var ReqDat = "Completed Decrypting.";       
+      sendResponse({farewell: ReqDat});
+  } else {
+      sendResponse({}); // snub them.
+    }
+});
