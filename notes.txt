@@ -1,0 +1,11 @@
+MESSENGER.COM
+
+TO GRAB TEXT FROM THE SO CALLED "TEXT FIELD"
+document.activeElement.textContent
+- note, you cannot set this since React keeps a property for an object and resets it, breaks the site
+
+TO SEND A MESSAGE
+MessengerComposer, .props.onMessageSend("MESSAGE GOES HERE")
+
+TO CLEAR THE TEXT FIELD
+window.strawberry.publicInstance._resetState()
