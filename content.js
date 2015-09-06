@@ -36,10 +36,11 @@ function injectMe() {
   (document.head||document.documentElement).appendChild(script);
   script.parentNode.removeChild(script);
 
+  console.log(window);
+
 }
 
 document.onkeydown = function(e) {
-
   var div1 = document.querySelector("[aria-label='Type a message...']");
   var actualSpan = $(div1).find("div").find("div").find("span").find("span");
 
@@ -47,21 +48,24 @@ document.onkeydown = function(e) {
   if (key == 18) {
 
     var message = $(actualSpan).text();
-    var encrypted = sjcl.encrypt("password", message);
+    if (!localStorage["passphrase"]) {
+      localStorage["passphrase"] = prompt("set a passphrase");
+    }
+
+    var encrypted = sjcl.encrypt(localStorage['passphrase'], message);
 
     actualSpan.html(encrypted);
   }
+
 }
 
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
   if (request.greeting == "decrypt") {
       var encryptedMessages = $("div:contains('{\"iv\":\"')");
-      console.log(encryptedMessages);
       for (var i = 0; i < encryptedMessages.length; i++) {
         var text = $(encryptedMessages[i]).text();
         var html = $(encryptedMessages[i]).html();
         if (text.startsWith("{\"iv") && !html.includes("<div")) {
-          console.log(text);
           try {
             var decrypted = sjcl.decrypt("password", text);
             $(encryptedMessages[i]).text(decrypted);
