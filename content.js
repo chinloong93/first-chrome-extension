@@ -10,14 +10,20 @@ function sleep(milliseconds) {
 
 function injectMe() {
 
+      var s = document.createElement('script');
+      s.src = chrome.extension.getURL('./openpgp.js');
+      s.onload = function() {
+        this.parentNode.removeChild(this);
+      };
+      (document.head||document.documentElement).appendChild(s);
+
   var actualCode = '(' + function() {
       // All code is executed in a local scope.
       // For example, the following does NOT overwrite the global `alert` method
       // var alert = null;
       // To overwrite a global variable, prefix `window`:
       // window.bananas = "bananas are so dank";
-      window.__REACT_DEVTOOLS_GLOBAL_HOOK__.on();
-      console.log("beginning injection")
+      console.log("beginning injection");
       var elementData = window.__REACT_DEVTOOLS_GLOBAL_HOOK__.reactDevtoolsAgent.elementData.values(); 
       var elts = []; var done = false; 
       while (!done) {   
