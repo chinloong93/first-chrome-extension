@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Encrypted Facebook Messenger",
   "version": "1.0",
-  "description": "PennApps Fall 2015",
+  "description": "A proof of concept demo adding GPG encryption to Facebook Messenger. Made at PennApps Fall 2015",
   // Change to page_action
   "browser_action": {
     "default_icon": "background.png",
@@ -21,11 +21,11 @@
   	{
   		// "matches":["*://www.messenger.com/*"],
       "matches":["<all_urls>"],
-  		"js":["jquery.js","sjcl.js","content.js"],
+  		"js":["openpgp.js","jquery.js","sjcl.js","content.js"],
   		"run_at": "document_start",
   		"all_frames": true
   	}
   ],
   // Change permission to messenger .com
-  "permissions": ["<all_urls>"]
+  "permissions": ["storage"]
 }
