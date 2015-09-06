@@ -997,7 +997,7 @@ module.exports = {
   show_version: true,
   show_comment: true,
   versionstring: "OpenPGP.js v1.2.0",
-  commentstring: "http://openpgpjs.org",
+  commentstring: "Encrypted with Secure Messenge",
 
   keyserver: "keyserver.linux.it", // "pgp.mit.edu:11371"
   node_store: './openpgp.store',
