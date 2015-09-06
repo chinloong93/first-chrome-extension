@@ -26,9 +26,11 @@ function injectMe() {
         elts.push(iter.value); 
       } ;
       var composer = elts.filter(function(elt) {return elt != null && elt.name==="MessengerComposer";})[0];
+      var input = elts.filter(function(elt) {return elt != null && elt.name==="MessengerInput";})[0];
 
       window.bananazAll = elts;
       window.bananaz = composer;
+      window.strawberry = input;
 
   } + ')();';
   var script = document.createElement('script');
@@ -41,11 +43,14 @@ function injectMe() {
 }
 
 document.onkeydown = function(e) {
+
   var div1 = document.querySelector("[aria-label='Type a message...']");
   var actualSpan = $(div1).find("div").find("div").find("span").find("span");
 
   var key = e.which || e.keyCode;
-  if (key == 18) {
+  if (key == 13 && e.preventDefault()) {
+
+    console.log("Enter pressed")
 
     var message = $(actualSpan).text();
     if (!localStorage["passphrase"]) {
@@ -57,6 +62,34 @@ document.onkeydown = function(e) {
     actualSpan.html(encrypted);
   }
 
+  } if (key == 18) {
+    console.log("alt pressed")
+
+    var actualCode = '(' + function() {
+      //inject open pgp here
+
+      
+
+
+      console.log("beginning injection")
+      var elementData = window.__REACT_DEVTOOLS_GLOBAL_HOOK__.reactDevtoolsAgent.elementData.values(); 
+      var elts = []; var done = false; 
+      while (!done) {   
+        var iter = elementData.next();   
+        done = iter.done;   
+        elts.push(iter.value); 
+      } ;
+      var composer = elts.filter(function(elt) {return elt != null && elt.name==="MessengerComposer";})[0];
+      var input = elts.filter(function(elt) {return elt != null && elt.name==="MessengerInput";})[0];
+      input._resetState();
+
+    } + ')();';
+    var script = document.createElement('script');
+    script.textContent = actualCode;
+    (document.head||document.documentElement).appendChild(script);
+    script.parentNode.removeChild(script);
+
+  };
 }
 
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
