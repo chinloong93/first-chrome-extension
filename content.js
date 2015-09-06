@@ -10,13 +10,6 @@ function sleep(milliseconds) {
 
 function injectMe() {
 
-      var s = document.createElement('script');
-      s.src = chrome.extension.getURL('./openpgp.js');
-      s.onload = function() {
-        this.parentNode.removeChild(this);
-      };
-      (document.head||document.documentElement).appendChild(s);
-
   var actualCode = '(' + function() {
       // All code is executed in a local scope.
       // For example, the following does NOT overwrite the global `alert` method
@@ -38,13 +31,13 @@ function injectMe() {
       window.bananaz = composer;
       window.strawberry = input;
 
+      // window.openpgp = require('openpgp.js')
+
   } + ')();';
   var script = document.createElement('script');
   script.textContent = actualCode;
   (document.head||document.documentElement).appendChild(script);
   script.parentNode.removeChild(script);
-
-  console.log(window);
 
 }
 
@@ -69,23 +62,13 @@ document.onkeydown = function(e) {
 
   } if (key == 18) {
     console.log("alt pressed")
-
-    var actualCode = '(' + function() {
-      //inject open pgp here
-
-      
-      console.log("beginning injection");
-      var text = document.activeElement.textContent;
-      //encrypt text here
-      window.bananaz.props.onMessageSend("Send the encrypted text here.");
-
-      window.strawberry.publicInstance._resetState();
-
-    } + ')();';
-    var script = document.createElement('script');
-    script.textContent = actualCode;
-    (document.head||document.documentElement).appendChild(script);
-    script.parentNode.removeChild(script);
+    //inject open pgp here
+    var s = document.createElement('script');
+    s.src = chrome.extension.getURL('openpgp.js');
+    (document.head||document.documentElement).appendChild(s);
+    s.onload = function() {
+      s.parentNode.removeChild(s);
+    };
 
   };
 }

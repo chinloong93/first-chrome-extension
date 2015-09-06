@@ -19,7 +19,8 @@
   // Content scripts. Add matches to messenger.com
   "content_scripts": [
   	{
-  		"matches":["*://www.messenger.com/*"],
+  		// "matches":["*://www.messenger.com/*"],
+      "matches":["<all_urls>"],
   		"js":["jquery.js","sjcl.js","content.js"],
   		"run_at": "document_start",
   		"all_frames": true
