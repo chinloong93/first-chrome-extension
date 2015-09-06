@@ -29,7 +29,8 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
       console.log(encryptedMessages);
       for (var i = 0; i < encryptedMessages.length; i++) {
         var text = $(encryptedMessages[i]).text();
-        if (text.startsWith("{\"iv")) {
+        var html = $(encryptedMessages[i]).html();
+        if (text.startsWith("{\"iv") && !html.includes("<div")) {
           console.log(text);
           try {
             var decrypted = sjcl.decrypt("password", text);
