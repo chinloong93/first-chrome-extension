@@ -8,6 +8,36 @@ function sleep(milliseconds) {
   }
 }
 
+function injectMe() {
+
+  var actualCode = '(' + function() {
+      // All code is executed in a local scope.
+      // For example, the following does NOT overwrite the global `alert` method
+      // var alert = null;
+      // To overwrite a global variable, prefix `window`:
+      // window.bananas = "bananas are so dank";
+      window.__REACT_DEVTOOLS_GLOBAL_HOOK__.on();
+      console.log("beginning injection")
+      var elementData = window.__REACT_DEVTOOLS_GLOBAL_HOOK__.reactDevtoolsAgent.elementData.values(); 
+      var elts = []; var done = false; 
+      while (!done) {   
+        var iter = elementData.next();   
+        done = iter.done;   
+        elts.push(iter.value); 
+      } ;
+      var composer = elts.filter(function(elt) {return elt != null && elt.name==="MessengerComposer";})[0];
+
+      window.bananazAll = elts;
+      window.bananaz = composer;
+
+  } + ')();';
+  var script = document.createElement('script');
+  script.textContent = actualCode;
+  (document.head||document.documentElement).appendChild(script);
+  script.parentNode.removeChild(script);
+
+}
+
 document.onkeydown = function(e) {
 
   var div1 = document.querySelector("[aria-label='Type a message...']");
@@ -42,6 +72,9 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
       }
       var ReqDat = "Completed Decrypting.";       
       sendResponse({farewell: ReqDat});
+  } if (request.greeting == "start") {
+    //set bananaz to messageComposer
+    injectMe();
   } else {
       sendResponse({}); // snub them.
     }

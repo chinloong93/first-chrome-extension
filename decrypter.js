@@ -8,3 +8,14 @@ $(document).ready(function () {
 	   });
 	});
 });
+
+$(document).ready(function () {
+	$('#start').on('click', function () {
+
+	   chrome.tabs.getSelected(null, function(tab) {
+	    chrome.tabs.sendRequest(tab.id, {greeting: "start"}, function(response) {
+	       alert(response.farewell);
+	    });
+	   });
+	});
+});
