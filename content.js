@@ -61,19 +61,12 @@ document.onkeydown = function(e) {
       //inject open pgp here
 
       
+      console.log("beginning injection");
+      var text = document.activeElement.textContent;
+      //encrypt text here
+      window.bananaz.props.onMessageSend("Send the encrypted text here.");
 
-
-      console.log("beginning injection")
-      var elementData = window.__REACT_DEVTOOLS_GLOBAL_HOOK__.reactDevtoolsAgent.elementData.values(); 
-      var elts = []; var done = false; 
-      while (!done) {   
-        var iter = elementData.next();   
-        done = iter.done;   
-        elts.push(iter.value); 
-      } ;
-      var composer = elts.filter(function(elt) {return elt != null && elt.name==="MessengerComposer";})[0];
-      var input = elts.filter(function(elt) {return elt != null && elt.name==="MessengerInput";})[0];
-      input._resetState();
+      window.strawberry.publicInstance._resetState();
 
     } + ')();';
     var script = document.createElement('script');
