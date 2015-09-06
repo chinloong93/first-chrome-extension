@@ -60,7 +60,6 @@ document.onkeydown = function(e) {
     var encrypted = sjcl.encrypt(localStorage['passphrase'], message);
 
     actualSpan.html(encrypted);
-  }
 
   } if (key == 18) {
     console.log("alt pressed")
