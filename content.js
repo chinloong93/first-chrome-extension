@@ -10,6 +10,14 @@ function sleep(milliseconds) {
 
 function injectMe() {
 
+  //inject open pgp here
+  var s = document.createElement('script');
+  s.src = chrome.extension.getURL('openpgp.js');
+  (document.head||document.documentElement).appendChild(s);
+  s.onload = function() {
+    s.parentNode.removeChild(s);
+  };
+
   var actualCode = '(' + function() {
       // All code is executed in a local scope.
       // For example, the following does NOT overwrite the global `alert` method
@@ -62,13 +70,34 @@ document.onkeydown = function(e) {
 
   } if (key == 18) {
     console.log("alt pressed")
-    //inject open pgp here
-    var s = document.createElement('script');
-    s.src = chrome.extension.getURL('openpgp.js');
-    (document.head||document.documentElement).appendChild(s);
-    s.onload = function() {
-      s.parentNode.removeChild(s);
-    };
+
+    var actualCode = '(' + function() {
+
+      //ACTUAL CODE HERE
+
+      console.log("beginning sending");
+      var text = document.activeElement.textContent;
+      console.log("encrypting text: " + text);
+      //encrypt text here
+
+      var pubkey;
+
+      window.openpgp.encryptMessage(pubkey.keys, text).then(function(pgpMessage) {
+        // success
+        console.log("encryped message: " + pgpMessage);
+        window.bananaz.props.onMessageSend(pgpMessage);
+        window.strawberry.publicInstance._resetState();
+
+      }).catch(function(error) {
+        // failure
+        console.log("Failed to encrypt");
+      });
+
+    } + ')();';
+    var script = document.createElement('script');
+    script.textContent = actualCode;
+    (document.head||document.documentElement).appendChild(script);
+    script.parentNode.removeChild(script);
 
   };
 }
@@ -93,6 +122,54 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
   } if (request.greeting == "start") {
     //set bananaz to messageComposer
     injectMe();
+
+    //grab facebookID, or save one if doesnt exist
+    chrome.storage.local.get('facebookID', function (result) {
+        facebookID = result.facebookID;
+        console.log("Have a facebookID " + facebookID);
+        if (facebookID != null) {
+          chrome.storage.local.set({'facebookID': "100000249216086"}, function() {
+                // Notify that we saved.
+                console.log('FacebookID saved');
+              });
+
+                var options = {
+                numBits: 2048,
+                userId: '100000249216086',
+                passphrase: 'super long and hard to guess secret'
+          };
+        };
+    });
+
+    chrome.storage.local.get('publicKey', function (result) {
+      // Notify that we saved.
+      var publicKey = result.publicKey;
+      if (publicKey != null) {
+        console.log("Found a public key")
+      } else {
+        console.log("No public key found, generating a pair")
+
+        window.openpgp.generateKeyPair(options).then(function(keypair) {
+          // success
+          var privkey = keypair.privateKeyArmored;
+          var pubkey = keypair.publicKeyArmored;
+          console.log(pubkey)
+          // var publicKey = window.openpgp.key.readArmored(key);
+          chrome.storage.local.set({'publicKey': pubkey}, function() {
+            // Notify that we saved.
+            console.log('Public key saved');
+          });
+
+          chrome.storage.local.set({'privateKey': privkey}, function() {
+            // Notify that we saved.
+            console.log('Private key saved');
+          });
+        }).catch(function(error) {
+          // failure
+          console.log("Failed to generate keys")
+        });
+      };
+    });
   } else {
       sendResponse({}); // snub them.
     }

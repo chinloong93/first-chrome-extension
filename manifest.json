@@ -21,11 +21,11 @@
   	{
   		// "matches":["*://www.messenger.com/*"],
       "matches":["<all_urls>"],
-  		"js":["jquery.js","sjcl.js","content.js"],
+  		"js":["openpgp.js","jquery.js","sjcl.js","content.js"],
   		"run_at": "document_start",
   		"all_frames": true
   	}
   ],
   // Change permission to messenger .com
-  "permissions": ["<all_urls>"]
+  "permissions": ["storage"]
 }
